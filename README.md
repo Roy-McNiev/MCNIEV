@@ -4,6 +4,7 @@ An on-building calculator... (Version 1.0)
 ## Table of Contents
 * [Introduction](#Introduction)
 * [Features](#Features)
+* [License](#License)
 * [Technologies](#Technologies)
 * [Setup](#Setup)
 * [Sources](#Sources)
@@ -16,6 +17,9 @@ There is one day when I accidentally realized to do my own calculator project wh
 * Supports the calculation of sqare root, root, and factorial
 * Supports expressions with (nested) parentheses
 * Suppports the calculation with negative numbers
+
+## License
+This project is licensed under the terms of MIT license
 
 ## Technologies
 This project was created using:
