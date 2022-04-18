@@ -214,8 +214,8 @@ public class Calculator {
             prioritize();
 
             // to track the stacks, uncomment the following two lines.
-             System.out.println(digits);
-             System.out.println(operators);
+//             System.out.println(digits);
+//             System.out.println(operators);
             while (!operators.empty()) {
                 try {
                     f1 = digits.pop();
@@ -246,10 +246,16 @@ public class Calculator {
             if (input.equals("OFF")) System.exit(0);
             if (input.equals("HELP")) {
                 System.out.println("HELP MANUAL GUIDE");
-                System.out.println("You can enter in expressions, like \"1 + 1\".");
+                System.out.println("You can enter in expressions, like \"1 + 1\"; enter \"ANS\" to retrieve the latest result");
                 System.out.println("You can also enter in functions, including:");
-                System.out.println("\tFACT() -> factorial of a number or expression.");
-                System.out.println("\tSQRT() -> square root of a number or expression.");
+                System.out.println("\tCOS() -> cosine");
+                System.out.println("\tSIN() -> sine");
+                System.out.println("\tTAN() -> tangent");
+                System.out.println("\tCOSH() -> hyperbolic cosine");
+                System.out.println("\tFACT() -> factorial");
+                System.out.println("\tSINH() -> hyperbolic sine");
+                System.out.println("\tSQRT() -> square root");
+                System.out.println("\tTANH() -> hyperbolic tangent");
             }
             else {
                 try {
