@@ -212,7 +212,6 @@ public class Calculator {
         if (operators.size() == 0) return digits.size() == 0 ? Float.NaN : digits.get(0);
         else {
             prioritize();
-
             // to track the stacks, uncomment the following two lines.
 //             System.out.println(digits);
 //             System.out.println(operators);
