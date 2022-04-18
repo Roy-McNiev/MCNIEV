@@ -22,6 +22,7 @@ This project was created using:
 * Java/JDK 15
 
 ## Setup
-To setup the project, you will have to install JDK 8.0 or a newer version. You will have to run the main method in the Calculaor class
+To setup the project, you will have to install JDK 8.0 or a newer version. You will have to run the main method in the Calculaor class.
 
 ## Sources
+The method used in this project of handling operators is inspired by [@久曲健的测试窝] (https://www.cnblogs.com/longronglang/p/13693065.html?ivk_sa=1024320u).
