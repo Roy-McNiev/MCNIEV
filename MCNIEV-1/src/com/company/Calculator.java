@@ -1,5 +1,6 @@
 package com.company;
 
+import com.company.errors.ArgumentError;
 import com.company.errors.SyntaxError;
 
 import java.lang.reflect.InvocationTargetException;
@@ -35,7 +36,7 @@ public class Calculator {
         };
     }
 
-    private static String metaExec(String line) throws SyntaxError {
+    private static String metaExec(String line) throws SyntaxError, ArgumentError {
         /*
          * The final value returned for parenthesis
          */
@@ -55,7 +56,17 @@ public class Calculator {
         /*
          * The number of parameters in the function call, signified by commas
          */
-        int parameter = 1;
+        int parameterNum = 1;
+
+        /*
+         * Helps iterate through the parameters being entered in the function
+         */
+        int iterator;
+
+        /*
+         * Stores the parameters for calling the functions
+         */
+        String[] parameters = new String[2];
 
         /*
          * Manages function execution
@@ -70,24 +81,34 @@ public class Calculator {
         for (int i = 0; i < line.length() - 1; i++) {
             if (line.charAt(i) == '(') {
                 leftParCount = 1;
+                iterator = i + 1;
 
                 if (i >= 4) {
                     functionDesc = switch (line.substring(i - 4, i)) {
                         case "FACT" -> "FACT";
+                        case "ROOT" -> "ROOT";
                         case "SQRT" -> "SQRT";
                         default -> "";
                     };
                 }
 
+                /*
+                 * Iterates the contents in the parenthesis
+                 */
                 for (int j = i + 1; j < line.length(); j++) {
                     if (line.charAt(j) == '(') leftParCount++;
                     else if (line.charAt(j) == ')') {
                         rightParCount++;
                         if (leftParCount == rightParCount) {
                             lastRightParenthesis = j;
+                            parameters[parameterNum - 1] = line.substring(iterator, j);
                             break;
                         }
-                    } else if (line.charAt(j) == ',') if (leftParCount - rightParCount == 1) parameter = 2;
+                    } else if (line.charAt(j) == ',') if (leftParCount - rightParCount == 1) {
+                        parameters[parameterNum - 1] = line.substring(i + 1,j);
+                        parameterNum++;
+                        iterator = j + 1;
+                    }
                 }
 
                 /*
@@ -95,18 +116,23 @@ public class Calculator {
                  */
                 try {
                     if (!functionDesc.equals("")) {
-                        Class<?> cls = Class.forName("com.company.arithmeticals." + functionDesc);
-                        if (parameter == 1) {
+                        Class<?> cls = Class.forName("com.company.arithmetics." + functionDesc);
+                        if (parameterNum == 1) {
                             Method method = cls.getMethod("solve", Double.class);
-
-                            result = Float.parseFloat(String.valueOf(method.invoke(cls.newInstance(),
-                                    (double) calculate(metaExec(line.substring(i + 1, lastRightParenthesis))))));
+                            result = Float.parseFloat(String.valueOf(method.invoke(cls.getDeclaredConstructor().newInstance(),
+                                    (double) calculate(metaExec(parameters[0])))));
+                        } else if (parameterNum == 2){
+                            Method method = cls.getMethod("solve", Double.class, Double.class);
+                            result = Float.parseFloat(String.valueOf(method.invoke(cls.getDeclaredConstructor().newInstance(),
+                                    (double) calculate(metaExec(parameters[0])),
+                                    (double) calculate(metaExec(parameters[1])))));
                         }
                     } else result = calculate(metaExec(line.substring(i + 1, lastRightParenthesis)));
                 } catch (StringIndexOutOfBoundsException | ClassNotFoundException |
-                        NoSuchMethodException | InstantiationException | IllegalAccessException |
-                        InvocationTargetException e) {
+                        NoSuchMethodException | InstantiationException | IllegalAccessException e) {
                     throw new SyntaxError();
+                } catch (InvocationTargetException e) {
+                    throw new ArgumentError();
                 }
 
                 return line.substring(0, i - functionDesc.length()).concat(String.valueOf(result)).concat(
@@ -191,25 +217,36 @@ public class Calculator {
         String input;
 
         System.out.println("Welcome to the statistical calculator MCNIEV-1.");
+        System.out.println("Enter formulas, or \"HELP\" for a guide. \"OFF\" to quit.");
 
         while (true) {
             System.out.print("> ");
             input = in.nextLine().strip().toUpperCase(Locale.ROOT).replaceAll(" ", "");
 
             if (input.equals("OFF")) System.exit(0);
-
-            try {
-                input = metaExec(input);
-                while (input.indexOf('(') != -1) {
+            if (input.equals("HELP")) {
+                System.out.println("HELP MANUAL GUIDE");
+                System.out.println("You can enter in expressions, like \"1 + 1\".");
+                System.out.println("You can also enter in functions, including:");
+                System.out.println("\tFACT() -> factorial of a number or expression.");
+                System.out.println("\tSQRT() -> square root of a number or expression.");
+            }
+            else {
+                try {
                     input = metaExec(input);
-                }
+                    while (input.indexOf('(') != -1) {
+                        input = metaExec(input);
+                    }
 
-                System.out.println(calculate(input));
-            } catch (SyntaxError e) {
-                System.out.println("ERR: SYNTAX");
-            } finally {
-                digits.clear();
-                operators.clear();
+                    System.out.println(calculate(input));
+                } catch (SyntaxError e) {
+                    System.out.println("ERR: SYNTAX");
+                } catch (ArgumentError e) {
+                    System.out.println("ERR: ARGUMENT");
+                } finally {
+                    digits.clear();
+                    operators.clear();
+                }
             }
         }
     }
