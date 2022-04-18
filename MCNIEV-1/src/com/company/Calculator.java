@@ -9,10 +9,11 @@ import java.math.BigDecimal;
 import java.util.*;
 
 public class Calculator {
-
     private static final Stack<Float> digits = new Stack<>();
     private static final Stack<Character> operators = new Stack<>();
     private static final StringBuffer digitTemp = new StringBuffer();
+
+    private static float history = 0;
 
     private static int getPriority(char c) {
         return switch (c) {
@@ -175,7 +176,8 @@ public class Calculator {
     private static void pushTemp() throws SyntaxError {
         if (!digitTemp.isEmpty()) {
             try {
-                digits.insertElementAt(Float.parseFloat(digitTemp.toString()), 0);
+                if (digitTemp.toString().equals("ANS")) digits.insertElementAt(history, 0);
+                else digits.insertElementAt(Float.parseFloat(digitTemp.toString()), 0);
             } catch (NumberFormatException e) {
                 throw new SyntaxError();
             } finally {
@@ -252,11 +254,11 @@ public class Calculator {
             else {
                 try {
                     input = metaExec(input);
-                    while (input.indexOf('(') != -1) {
-                        input = metaExec(input);
-                    }
+                    while (input.indexOf('(') != -1) input = metaExec(input);
 
-                    System.out.println(calculate(input));
+                    history = calculate(input);
+
+                    System.out.println(history);
                 } catch (SyntaxError e) {
                     System.out.println("ERR: SYNTAX");
                 } catch (ArgumentError e) {
