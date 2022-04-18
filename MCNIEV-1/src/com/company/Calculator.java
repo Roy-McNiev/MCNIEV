@@ -83,12 +83,29 @@ public class Calculator {
                 leftParCount = 1;
                 iterator = i + 1;
 
-                if (i >= 4) {
+                if (i == 3) {
+                    functionDesc = switch (line.substring(0, i)) {
+                        case "SIN" -> "SIN";
+                        case "COS" -> "COS";
+                        case "TAN" -> "TAN";
+                        default -> "";
+                    };
+                }
+
+                else if (i >= 4) {
                     functionDesc = switch (line.substring(i - 4, i)) {
+                        case "COSH" -> "COSH";
                         case "FACT" -> "FACT";
                         case "ROOT" -> "ROOT";
+                        case "SINH" -> "SINH";
                         case "SQRT" -> "SQRT";
-                        default -> "";
+                        case "TANH" -> "TANH";
+                        default -> switch (line.substring(i - 3, i)) {
+                            case "SIN" -> "SIN";
+                            case "COS" -> "COS";
+                            case "TAN" -> "TAN";
+                            default -> "";
+                        };
                     };
                 }
 
@@ -128,6 +145,7 @@ public class Calculator {
                                     (double) calculate(metaExec(parameters[1])))));
                         }
                     } else result = calculate(metaExec(line.substring(i + 1, lastRightParenthesis)));
+
                 } catch (StringIndexOutOfBoundsException | ClassNotFoundException |
                         NoSuchMethodException | InstantiationException | IllegalAccessException e) {
                     throw new SyntaxError();
@@ -143,8 +161,6 @@ public class Calculator {
     }
 
     private static void prioritize() {
-        System.out.println(digits);
-        System.out.println(operators);
         for (int i = 0; i < operators.size() - 1; i++) {
             char currentChar = operators.get(i);
             
@@ -175,6 +191,8 @@ public class Calculator {
         float result = 0;
         float f1, f2;
 
+        line = line.replaceAll("--", "+");
+
         for (int i = 0; i < line.length(); i++) {
             char currentChar = line.charAt(i);
 
@@ -194,8 +212,8 @@ public class Calculator {
             prioritize();
 
             // to track the stacks, uncomment the following two lines.
-//             System.out.println(digits);
-//             System.out.println(operators);
+             System.out.println(digits);
+             System.out.println(operators);
             while (!operators.empty()) {
                 try {
                     f1 = digits.pop();
