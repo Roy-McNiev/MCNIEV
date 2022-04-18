@@ -18,7 +18,7 @@ If you feel you can contribute to this project, or just simple wanted to comment
 
 ## Features
 * Supports +, -, *, /, ^
-* Supports the functional calculations such as sqare root, factorial, sin, sinh, and so on
+* Supports the functional calculations such as square root, factorial, sin, sinh, and so on
 * Supports expressions with (nested) parentheses
 * Suppports the calculation with negative numbers
 
